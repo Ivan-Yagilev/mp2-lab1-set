@@ -70,22 +70,21 @@ int TSet::operator!=(const TSet &s) const // сравнение
 
 TSet TSet::operator+(const TSet &s) // объединение
 {
-    TSet tField(std::max(MaxPower, s.MaxPower));
-    tField.BitField = BitField | s.BitField;
-    return tField;
+    TSet res((*this).BitField | s.BitField);
+    return res;
 }
 
 TSet TSet::operator+(const int Elem) // объединение с элементом
 {
     TSet tField(*this);
-    tField.BitField.SetBit(Elem);
+    tField.InsElem(Elem);
     return tField;
 }
 
 TSet TSet::operator-(const int Elem) // разность с элементом
 {
     TSet tField(*this);
-    tField.BitField.ClrBit(Elem);
+    tField.DelElem(Elem);
     return tField;
 }
 
@@ -107,13 +106,18 @@ TSet TSet::operator~(void) // дополнение
 
 istream &operator>>(istream &istr, TSet &s) // ввод
 {
-    istr >> s.BitField;
-    s.MaxPower = s.BitField.GetLength();
+    int tmp;
+    for (int i = 0; i < s.MaxPower; i++) {
+        istr >> tmp;
+        s.InsElem(tmp);
+    }
     return istr;
 }
 
 ostream& operator<<(ostream &ostr, const TSet &s) // вывод
 {
-    ostr << s.BitField;
+    for (int i = 0; i < s.MaxPower; i++)
+        if (s.BitField.GetBit(i) == 1)
+            ostr << i << ' ';
     return ostr;
 }
